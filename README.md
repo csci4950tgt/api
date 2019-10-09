@@ -20,3 +20,7 @@ Prerequisites:
 
 1. Run `docker build -t csci4950tgt/api .` to build the image
 2. Run `docker push csci4950tgt/api` to push new image to Docker repo
+
+#### Steps to test:
+
+1. Run `go test`
