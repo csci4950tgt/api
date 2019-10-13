@@ -23,4 +23,4 @@ Prerequisites:
 
 #### Steps to test:
 
-1. Run `go test`
+1. Run `go test` (or `go test -v` if you want verbose information)
