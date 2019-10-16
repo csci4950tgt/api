@@ -26,7 +26,7 @@ func TestCreateClient(t *testing.T) {
 	}
 
 	statusCode := resp.StatusCode
-	if statusCode != 405 {
+	if statusCode != http.StatusMethodNotAllowed {
 		t.Error("Expected http status code: 405, actual code: " + resp.Status)
 	}
 
@@ -34,7 +34,7 @@ func TestCreateClient(t *testing.T) {
 	resp, err = http.Post(url, "application/json", bytes.NewBuffer(requestJson))
 
 	statusCode = resp.StatusCode
-	if statusCode < 200 || statusCode > 299 {
+	if statusCode != http.StatusOK {
 		t.Error("HTTP error, reason " + resp.Status)
 	}
 }
@@ -48,7 +48,7 @@ func TestGetHoneyClientById(t *testing.T) {
 	}
 
 	statusCode := resp.StatusCode
-	if statusCode < 200 || statusCode > 299 {
+	if statusCode != http.StatusOK {
 		t.Error("HTTP error, reason " + resp.Status)
 	}
 }
