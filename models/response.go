@@ -1,10 +1,5 @@
 package models
 
-type ResponseHeader struct {
-	Key   string
-	Value string
-}
-
 type ResponseError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`

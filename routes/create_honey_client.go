@@ -18,25 +18,16 @@ func CreateHoneyClient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Initialize headers array
-	headers := []models.ResponseHeader{
-		models.ResponseHeader{
-			Key:   "Access-Control-Allow-Origin",
-			Value: "*",
-		},
-		models.ResponseHeader{
-			Key:   "Access-Control-Allow-Methods",
-			Value: "POST",
-		},
-	}
+	// Initialize header
+	header := http.Header{}
+	header.Add("Access-Control-Allow-Origin", "*")
+	header.Add("Access-Control-Allow-Methods", "POST")
 
-	// Set headers
-	util.SetHeaders(w, headers)
+	// Set header
+	util.SetHeader(w, header)
 
-	// Create a new ticket for handling
+	// Create a new ticket for handling, encode request into struct
 	var ticket models.Ticket
-
-	// Decodes json from request into Ticket struct
 	json.NewDecoder(r.Body).Decode(&ticket)
 	ticket.ID = 1
 

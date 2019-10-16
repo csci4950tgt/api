@@ -6,10 +6,10 @@ import (
 	"net/http"
 )
 
-// Set multiple headers by looping through header array
-func SetHeaders(w http.ResponseWriter, headers []models.ResponseHeader) {
-	for _, header := range headers {
-		w.Header().Set(header.Key, header.Value)
+// Set all key, value pairs of header in response
+func SetHeader(w http.ResponseWriter, header http.Header) {
+	for k, _ := range header {
+		w.Header().Set(k, header.Get(k))
 	}
 }
 

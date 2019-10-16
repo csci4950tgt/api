@@ -18,20 +18,13 @@ func GetHoneyClientById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Initialize headers array
-	headers := []models.ResponseHeader{
-		models.ResponseHeader{
-			Key:   "Access-Control-Allow-Origin",
-			Value: "*",
-		},
-		models.ResponseHeader{
-			Key:   "Access-Control-Allow-Methods",
-			Value: "GET",
-		},
-	}
+	// Initialize header
+	header := http.Header{}
+	header.Add("Access-Control-Allow-Origin", "*")
+	header.Add("Access-Control-Allow-Methods", "GET")
 
-	// Set headers
-	util.SetHeaders(w, headers)
+	// Set header
+	util.SetHeader(w, header)
 
 	// Initialize Ticket struct
 	vars := mux.Vars(r)               // get dynamic variables from mux handler
