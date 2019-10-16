@@ -9,29 +9,35 @@ import (
 	"net/http"
 )
 
-func SetupCreateResponse(w *http.ResponseWriter, r *http.Request) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methos", "POST")
-}
-
 func CreateHoneyClient(w http.ResponseWriter, r *http.Request) {
-
-	// Handling requests.
-	SetupCreateResponse(&w, r)
 	// If request type is not current request, return error.
 	if (*r).Method != "POST" {
-		util.WriteHttpErrorCode(w, http.StatusMethodNotAllowed, fmt.Sprintf("Method \"%s\" is not allowed.\n", (*r).Method))
+		msg := fmt.Sprintf("Method \"%s\" is not allowed.", (*r).Method)
+		util.WriteHttpErrorCode(w, http.StatusMethodNotAllowed, msg)
 
 		return
 	}
 
+	// Initialize headers array
+	headers := []models.ResponseHeader{
+		models.ResponseHeader{
+			Key:   "Access-Control-Allow-Origin",
+			Value: "*",
+		},
+		models.ResponseHeader{
+			Key:   "Access-Control-Allow-Methods",
+			Value: "POST",
+		},
+	}
+
+	// Set headers
+	util.SetHeaders(w, headers)
+
 	// Create a new ticket for handling
 	var ticket models.Ticket
 
-	// decodes json from request into Ticket struct
+	// Decodes json from request into Ticket struct
 	json.NewDecoder(r.Body).Decode(&ticket)
-
-	// ID and Name are not part of the request
 	ticket.ID = 1
 
 	// Create and write to json file
@@ -50,6 +56,7 @@ func CreateHoneyClient(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: run honeyclient and return error if failed
 
+	// Initialize Response
 	msg := fmt.Sprintf("Create ticket '%s' with ID '%d' and URL '%s'", ticket.Name, ticket.ID, ticket.URL)
 	res := models.Response{
 		Success: true,
