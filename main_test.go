@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
+	"github.com/csci4950tgt/api/models"
 	"net/http"
 	"testing"
 	"time"
@@ -30,7 +32,11 @@ func TestCreateClient(t *testing.T) {
 		t.Error("Expected http status code: 405, actual code: " + resp.Status)
 	}
 
-	var requestJson = []byte(`{"url": "https://www.google.com","screenshot": {"width": 1920,"height": 1080,"filename": "screenshot.png"},"useragent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Safari/605.1.15"}`)
+	request := &models.Ticket{URL: "https://www.google.com", Screenshot: models.ScreenShot{Width: 1920, Height: 1080, Filename: "screenshot.png"}}
+	requestJson, err := json.Marshal(request)
+	if err != nil {
+		t.Error(err)
+	}
 	resp, err = http.Post(url, "application/json", bytes.NewBuffer(requestJson))
 
 	statusCode = resp.StatusCode
