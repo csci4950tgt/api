@@ -2,8 +2,9 @@
 
 ## Installing postgres
 
-This is geared towards Mac users, sorry in advance for any non-Mac
-environments. Anyways, this documentation is based on [these amazing docs](http://postgresguide.com/setup/install.html) for installing and using Postgres, and the link covers Mac, Linux, and Window installations.
+This documentation is based on [these amazing docs](http://postgresguide.com/setup/install.html) for installing and using Postgres, and the link covers Mac, Linux, and Window installations.
+
+### Setup on macOS
 
 1. Install Postgres locally by following [these
    instructions](http://postgresguide.com/setup/install.html). (If using a Mac
@@ -31,6 +32,43 @@ environments. Anyways, this documentation is based on [these amazing docs](http:
    [Postico](https://eggerapps.at/postico/) for Mac. Here is the [official
    list](https://postgresapp.com/documentation/gui-tools.html)
    of clients
+
+### Setup on Arch (and Arch-like systems)
+
+1. Install necessary packages
+
+`sudo pacman -Syu postgresql pgadmin4`
+
+PgAdmin4 is a GUI management tool for postgreSQL. You can install any GUI
+tool you want instead.
+
+2. Initialize a new databse and start the postgre service
+
+``
+sudo -u postgres -i initdb --locale $LANG -E UTF8 -D /var/lib/postgres/data
+sudo systemctl start postgresql.service
+sudo systemctl enable postgresql.service
+``
+
+`systemctl enable` will make postgreSQL run everytime when the system starts.
+
+3. Create a database and a user
+
+``
+sudo -u postgres -i
+psql
+``
+
+Change the user to `postgres` and run `psql` shell, then create `gorm` databse
+and a `gorm` user.
+
+``
+CREATE USER gorm WITH PASSWORD 'gorm';
+CREATE DATABASE gorm;
+GRANT ALL PRIVILEGES ON DATABASE gorm to gorm;
+``
+
+4. Now you can exit the `psql` shell and you should be able to run API.
 
 ## How to run
 
