@@ -26,7 +26,7 @@ func GetTicketById(ID uint) (*Ticket, error) {
 
 func GetTickets() (*[]Ticket, error) {
 	var tickets []Ticket
-	err := db.Find(&tickets).Error
+	err := db.Order("created_at DESC").Find(&tickets).Error
 
 	return &tickets, err
 }
