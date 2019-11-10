@@ -59,4 +59,8 @@ Prerequisites:
 
 #### Steps to test:
 
-1. Run `go test` (or `go test -v` if you want verbose information)
+1. Setup a testing user and a testing database using `psql`
+   1. `CREATE USER testing WITH PASSWORD 'testing';`
+   2. `CREATE DATABASE testing;`
+   3. `GRANT ALL PRIVILEGES ON DATABASE testing to testing;`
+2. Run `go test ./...` to test recursively (or `go test ./... -v` if you want verbose information)
