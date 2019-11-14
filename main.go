@@ -16,7 +16,7 @@ func handleRoutes(r *mux.Router) {
 	r.HandleFunc("/api/tickets", routes.CreateTicket).Methods("POST")
 	r.HandleFunc("/api/tickets/{id}", routes.GetTicket).Methods("GET")
 	r.HandleFunc("/api/tickets/{id}/artifacts", routes.GetTicketArtifacts).Methods("GET")
-	r.HandleFunc("/api/tickets/{id}/artifacts/{fileName}", routes.GetArtifact).Methods("GET")
+	r.HandleFunc("/api/tickets/{id}/artifacts/{fileName:.*}", routes.GetArtifact).Methods("GET")
 	r.HandleFunc("/api/tickets/{id}/artifacts/screenshots", routes.GetTicketScreenshots).Methods("GET")
 	// TODO: make following route work
 	// r.HandleFunc("/api/tickets/{id}/artifacts/js", routes.GetTicketJS).Methods("GET")
