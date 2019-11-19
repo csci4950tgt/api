@@ -28,7 +28,7 @@ func main() {
 	handleRoutes(r)
 
 	// Initialize DB
-	models.InitDB("host=127.0.0.1 port=5432 user=gorm dbname=gorm password=gorm sslmode=disable")
+	models.InitDB()
 
 	// Listen and serve baby
 	fmt.Println("Server starting...")

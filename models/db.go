@@ -2,6 +2,8 @@ package models
 
 import (
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -9,18 +11,36 @@ import (
 )
 
 var db *gorm.DB
+var err error
 
-func InitDB(dataSourceName string) {
-	var err error
-	db, err = gorm.Open("postgres", dataSourceName)
+// get environment variable or fallback
+func getEnv(key, fallback string) string {
+	val := os.Getenv(key)
+	if val != "" {
+		return val
+	}
+	return fallback
+}
+
+func InitDB() {
+	// Get ENV variables for intitializing database
+	user := getEnv("PG_USER", "gorm")
+	password := getEnv("PG_PASSWORD", "gorm")
+	database := getEnv("PG_DB", "gorm")
+	host := getEnv("PG_HOST", "localhost")
+	port := getEnv("PG_PORT", "5432")
+
+	// Initialize db
+	dbInfo := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", host, port, user, database, password)
+	db, err = gorm.Open("postgres", dbInfo)
 
 	if err != nil {
-		fmt.Println(err)
-
+		log.Println(err)
 		panic("Failed to connect to database!")
 	}
 
+	log.Println("Setting up the database...")
+
 	// Migrate the schema
-	fmt.Println("Setting up the database...")
 	db.AutoMigrate(&Ticket{}, &ScreenShot{}, &FileArtifact{})
 }
