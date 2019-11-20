@@ -22,6 +22,10 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
+func NotifyTicketsChanged() {
+	db.Exec("NOTIFY update;")
+}
+
 func InitDB() {
 	// Get ENV variables for intitializing database
 	user := getEnv("PG_USER", "gorm")
