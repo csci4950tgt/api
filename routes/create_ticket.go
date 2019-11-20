@@ -34,6 +34,9 @@ func CreateTicket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// notify honeyclient of update:
+	models.NotifyTicketsChanged()
+
 	// Initialize Response
 	msg := "Successfully created ticket."
 	res := models.Response{
