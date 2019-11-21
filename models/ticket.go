@@ -19,7 +19,7 @@ func CreateTicket(ticket *Ticket) error {
 func GetTicketById(ID uint) (*Ticket, error) {
 	var ticket Ticket
 	// Preload line fetches the screenshot table and joins automatically:
-	err := db.Preload("ScreenShot").First(&ticket, ID).Error
+	err := db.Preload("ScreenShot", "ticket_id = (?)", ID).First(&ticket, ID).Error
 
 	return &ticket, err
 }
