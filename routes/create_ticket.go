@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -40,6 +41,38 @@ func CreateTicket(w http.ResponseWriter, r *http.Request) {
 		Success: true,
 		Message: &msg,
 		Ticket:  &ticket,
+	}
+
+	bytesRepresentation, err := json.Marshal(ticket)
+	if err != nil {
+		fmt.Println("Failed to Marshal ticket json:")
+		fmt.Println(err)
+
+		return
+	}
+
+	resp, err := http.Post(ticket.URL, "application/json", bytes.NewBuffer(bytesRepresentation))
+	if err != nil {
+		fmt.Println("Failed retrieve data from honeyclient")
+		fmt.Println(err)
+
+		return
+	}
+
+	err = json.NewDecoder(resp.Body).Decode(&ticket)
+	if err != nil {
+		fmt.Println("Failed to refresh ticket")
+		fmt.Println(err)
+
+		return
+	}
+
+	err = models.UpdateTicket(&ticket)
+	if err != nil {
+		fmt.Println("Failed to update ticket in Database:")
+		fmt.Println(err)
+
+		return
 	}
 
 	util.WriteHttpResponse(w, res)

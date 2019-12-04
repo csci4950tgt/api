@@ -16,6 +16,10 @@ func CreateTicket(ticket *Ticket) error {
 	return db.Create(ticket).Error
 }
 
+func UpdateTicket(ticket *Ticket) error {
+	return db.Save(&ticket).Error
+}
+
 func GetTicketById(ID uint) (*Ticket, error) {
 	var ticket Ticket
 	// Preload line fetches the screenshot table and joins automatically:
