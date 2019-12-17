@@ -28,9 +28,9 @@ func NotifyTicketsChanged() {
 
 func InitDB() {
 	// Get ENV variables for intitializing database
-	user := getEnv("PG_USER", "gorm")
-	password := getEnv("PG_PASSWORD", "gorm")
-	database := getEnv("PG_DB", "gorm")
+	user := getEnv("POSTGRES_USER", "gorm")
+	password := getEnv("POSTGRES_PASSWORD", "gorm")
+	database := getEnv("POSTGRES_DB", "gorm")
 	host := getEnv("PG_HOST", "localhost")
 	port := getEnv("PG_PORT", "5432")
 
