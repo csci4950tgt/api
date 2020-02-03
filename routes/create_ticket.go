@@ -35,8 +35,7 @@ func CreateTicket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// after returning ticket info to frontend, asynchonously send ticket to honeyclient, save after
-	// TODO: Why isn't this deferring????
-	defer models.ProcessTicket(&ticket)
+	go models.ProcessTicket(&ticket)
 
 	// Initialize Response
 	msg := "Successfully created ticket."
