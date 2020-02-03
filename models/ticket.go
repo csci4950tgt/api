@@ -1,6 +1,8 @@
 package models
 
 import (
+	"log"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -12,6 +14,14 @@ type Ticket struct {
 	ScreenShot []ScreenShot `json:"screenshots"`
 }
 
+// ProcessTicket saves processed ticket in database
+func ProcessTicket(ticket *Ticket) {
+	// TODO: implement!!
+	log.Println("Implement call to honeyclient")
+	log.Println("Implement database save")
+}
+
+// Create a ticket in the database
 func CreateTicket(ticket *Ticket) error {
 	return db.Create(ticket).Error
 }
