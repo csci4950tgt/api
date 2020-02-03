@@ -14,6 +14,11 @@ type Response struct {
 	FileArtifacts *[]FileArtifact `json:"fileArtifacts,omitempty"`
 }
 
+type CreateTicketResponse struct {
+	Success       bool      `json: "success"`
+	FileArtifacts *[]string `json:"fileArtifacts"`
+}
+
 // Makes ResponseError satisfy builtin Error type. See: https://blog.golang.org/error-handling-and-go
 func (e *ResponseError) Error() string {
 	return e.Message
