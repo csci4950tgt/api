@@ -3,6 +3,7 @@ package models
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -17,50 +18,62 @@ type Ticket struct {
 	ScreenShot []ScreenShot `json:"screenshots"`
 }
 
+type HoneyclientRequest struct {
+	ID          uint         `json: "id"`
+	URL         string       `json:"url"`
+	ScreenShots []ScreenShot `json:"screenshots"`
+}
+
 // ProcessTicket saves processed ticket in database
 func ProcessTicket(ticket *Ticket) {
-	// TODO: implement!!
-	requestBody, err := json.Marshal(&ticket)
-	if err != nil {
-		log.Fatalln(err)
+	// Convert ticket body to request format
+	req := HoneyclientRequest{ticket.ID, ticket.URL, ticket.ScreenShot}
+	if req.ScreenShots == nil {
+		// no screenshots in request, set to empty array so honeyclient not mad
+		req.ScreenShots = []ScreenShot{}
 	}
+	reqBody := new(bytes.Buffer)
+	json.NewEncoder(reqBody).Encode(req)
 
-	log.Println(ticket)
-	resp, err := http.Post("http://localhost:8000/ticket", "application/json", bytes.NewBuffer(requestBody))
-
+	// Send POST request to honeyclient to process ticket
+	resp, err := http.Post("http://localhost:8000/ticket", "application/json", reqBody)
+	if err != nil {
+		log.Println(err)
+	}
 	defer resp.Body.Close()
 
+	// Decode processed ticket for fileArtifact string names
 	var body CreateTicketResponse
 	json.NewDecoder(resp.Body).Decode(&body)
-	log.Println(body)
-
 	if !body.Success {
-		log.Fatalln("Error in decoding json")
+		log.Println("Error occured in honeyclient while processing ticket.")
 	}
 
+	// Loop through file artifact string names, get each file artifact from in memory storage, save in DB
 	var fileArtifact FileArtifact
-
-	for i, s := range *body.FileArtifacts {
-		log.Println(i, s)
+	for _, s := range *body.FileArtifacts {
+		// Get file artifact from in memory storage
 		resp, err := http.Get("http://localhost:8000" + s)
-
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
 		}
-
 		defer resp.Body.Close()
 
+		// Decode actual file artifact into our struct, set other fields
 		json.NewDecoder(resp.Body).Decode(&fileArtifact.Data)
 		fileArtifact.TicketId = ticket.ID
 		fileArtifact.Filename = s
 
+		// Create file artifact in database
 		err = CreateFileArtifact(&fileArtifact)
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
 		}
 	}
 
+	// Update ticket in db to show done processing
 	db.Model(&ticket).Update("processed", true)
+	fmt.Println("Honeyclient processed ticket %d", ticket.ID)
 }
 
 // Create a ticket in the database

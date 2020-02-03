@@ -24,11 +24,12 @@ func CreateTicket(w http.ResponseWriter, r *http.Request) {
 	// Create ticket in db
 	ticket.Processed = false
 	err = models.CreateTicket(&ticket)
+	fmt.Println("Created ticket %d", ticket.ID)
 
 	if err != nil {
-		util.WriteHttpErrorCode(w, http.StatusInternalServerError, "Failed to create entry for honeyclient to consume.")
+		util.WriteHttpErrorCode(w, http.StatusInternalServerError, "Failed to create ticket entry for honeyclient to consume. Likely an existing ticket at this ID")
 
-		fmt.Println("Failed to create entry for honeyclient to consume:")
+		fmt.Println("Failed to create ticket entry for honeyclient to consume:")
 		fmt.Println(err)
 
 		return
@@ -46,4 +47,6 @@ func CreateTicket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	util.WriteHttpResponse(w, res)
+
+	return
 }

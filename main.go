@@ -31,7 +31,7 @@ func main() {
 	models.InitDB()
 
 	// Listen and serve baby
-	fmt.Println("Server starting...")
+	fmt.Println("Server starting on http://localhost:8080...")
 	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:3000", "http://localhost:5000"})
 	http.ListenAndServe(":8080", handlers.CORS(allowedOrigins)(r))
 }
