@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 )
@@ -39,6 +41,7 @@ func ProcessTicket(ticket *Ticket) {
 	resp, err := http.Post("http://localhost:8000/ticket", "application/json", reqBody)
 	if err != nil {
 		log.Println(err)
+		return
 	}
 	defer resp.Body.Close()
 
@@ -47,6 +50,7 @@ func ProcessTicket(ticket *Ticket) {
 	json.NewDecoder(resp.Body).Decode(&body)
 	if !body.Success {
 		log.Println("Error occured in honeyclient while processing ticket.")
+		return
 	}
 
 	// Loop through file artifact string names, get each file artifact from in memory storage, save in DB
@@ -56,24 +60,29 @@ func ProcessTicket(ticket *Ticket) {
 		resp, err := http.Get("http://localhost:8000" + s)
 		if err != nil {
 			log.Println(err)
+			return
 		}
 		defer resp.Body.Close()
 
 		// Decode actual file artifact into our struct, set other fields
-		json.NewDecoder(resp.Body).Decode(&fileArtifact.Data)
+		resData, err := ioutil.ReadAll(resp.Body)
+		fileArtifact.Data = resData
 		fileArtifact.TicketId = ticket.ID
-		fileArtifact.Filename = s
-
+		// Remove "/artifacts/<id>" from beginning of 's'
+		sArr := strings.Split(s, "/")
+		filename := strings.Join(sArr[3:], "/")
+		fileArtifact.Filename = filename
 		// Create file artifact in database
 		err = CreateFileArtifact(&fileArtifact)
 		if err != nil {
 			log.Println(err)
+			return
 		}
 	}
 
 	// Update ticket in db to show done processing
-	db.Model(&ticket).Update("processed", true)
-	fmt.Println("Honeyclient processed ticket %d", ticket.ID)
+	defer db.Model(&ticket).Update("processed", true)
+	fmt.Println("Honeyclient processed ticket", ticket.ID)
 }
 
 // Create a ticket in the database

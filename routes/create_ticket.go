@@ -24,7 +24,6 @@ func CreateTicket(w http.ResponseWriter, r *http.Request) {
 	// Create ticket in db
 	ticket.Processed = false
 	err = models.CreateTicket(&ticket)
-	fmt.Println("Created ticket %d", ticket.ID)
 
 	if err != nil {
 		util.WriteHttpErrorCode(w, http.StatusInternalServerError, "Failed to create ticket entry for honeyclient to consume. Likely an existing ticket at this ID")
@@ -36,6 +35,7 @@ func CreateTicket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// after returning ticket info to frontend, asynchonously send ticket to honeyclient, save after
+	// TODO: Why isn't this deferring????
 	defer models.ProcessTicket(&ticket)
 
 	// Initialize Response
@@ -47,6 +47,4 @@ func CreateTicket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	util.WriteHttpResponse(w, res)
-
-	return
 }
