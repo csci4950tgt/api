@@ -1,6 +1,7 @@
 package models
 
 import (
+	"os"
 	"testing"
 )
 
@@ -9,7 +10,12 @@ func TestInitDB(t *testing.T) {
 }
 
 func ConnectToTesting() {
-	InitDB("host=127.0.0.1 port=5432 user=testing dbname=testing password=testing sslmode=disable")
+	_ = os.Setenv("POSTGRES_USER", "testing")
+	_ = os.Setenv("POSTGRES_PASSWORD", "testing")
+	_ = os.Setenv("POSTGRES_DB", "testing")
+	_ = os.Setenv("PG_HOST", "127.0.0.1")
+	_ = os.Setenv("PG_PORT", "5432")
+	InitDB()
 	ResetTables()
 }
 
