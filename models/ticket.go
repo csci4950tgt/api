@@ -20,22 +20,15 @@ type Ticket struct {
 	ScreenShot []ScreenShot `json:"screenshots"`
 }
 
-type HoneyclientRequest struct {
-	ID          uint         `json: "id"`
-	URL         string       `json:"url"`
-	ScreenShots []ScreenShot `json:"screenshots"`
-}
-
 // ProcessTicket saves processed ticket in database
 func ProcessTicket(ticket *Ticket) {
 	// Convert ticket body to request format
-	req := HoneyclientRequest{ticket.ID, ticket.URL, ticket.ScreenShot}
-	if req.ScreenShots == nil {
+	if ticket.ScreenShot == nil {
 		// no screenshots in request, set to empty array so honeyclient not mad
-		req.ScreenShots = []ScreenShot{}
+		ticket.ScreenShot = []ScreenShot{}
 	}
 	reqBody := new(bytes.Buffer)
-	json.NewEncoder(reqBody).Encode(req)
+	json.NewEncoder(reqBody).Encode(ticket)
 
 	// Send POST request to honeyclient to process ticket
 	resp, err := http.Post("http://localhost:8000/ticket", "application/json", reqBody)
