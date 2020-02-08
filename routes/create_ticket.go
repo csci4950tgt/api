@@ -21,21 +21,21 @@ func CreateTicket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// mark new ticket for processing and save in db:
+	// Create ticket in db
 	ticket.Processed = false
 	err = models.CreateTicket(&ticket)
 
 	if err != nil {
-		util.WriteHttpErrorCode(w, http.StatusInternalServerError, "Failed to create entry for honeyclient to consume.")
+		util.WriteHttpErrorCode(w, http.StatusInternalServerError, "Failed to create ticket entry for honeyclient to consume. Likely an existing ticket at this ID")
 
-		fmt.Println("Failed to create entry for honeyclient to consume:")
+		fmt.Println("Failed to create ticket entry for honeyclient to consume:")
 		fmt.Println(err)
 
 		return
 	}
 
-	// notify honeyclient of update:
-	models.NotifyTicketsChanged()
+	// after returning ticket info to frontend, asynchonously send ticket to honeyclient, save after
+	go models.ProcessTicket(&ticket)
 
 	// Initialize Response
 	msg := "Successfully created ticket."

@@ -22,10 +22,7 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
-func NotifyTicketsChanged() {
-	db.Exec("NOTIFY update;")
-}
-
+// InitDB connects app to postgres databaset
 func InitDB() {
 	// Get ENV variables for intitializing database
 	user := getEnv("POSTGRES_USER", "gorm")
