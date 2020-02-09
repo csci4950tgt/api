@@ -14,10 +14,11 @@ import (
 
 type Ticket struct {
 	gorm.Model
-	Name       string       `json:"name",gorm:"size:255"`
-	URL        string       `json:"url",gorm:"size:4096"`
-	Processed  bool         `json:"processed"`
-	ScreenShot []ScreenShot `json:"screenshots"`
+	Name           string       `json:"name",gorm:"size:255"`
+	URL            string       `json:"url",gorm:"size:4096"`
+	Processed      bool         `json:"processed"`
+	ScreenShot     []ScreenShot `json:"screenshots"`
+	MalwareMatches string       `json:"malwareMatches",gorm:"size:4096"`
 }
 
 // ProcessTicket saves processed ticket in database
@@ -45,6 +46,8 @@ func ProcessTicket(ticket *Ticket) {
 		log.Println("Error occured in honeyclient while processing ticket.")
 		return
 	}
+
+	db.Model(&ticket).Update("malwareMatches", body.MalwareMatches)
 
 	// Loop through file artifact string names, get each file artifact from in memory storage, save in DB
 	var fileArtifact FileArtifact
