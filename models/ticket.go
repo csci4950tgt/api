@@ -33,11 +33,11 @@ func ProcessTicket(ticket *Ticket) {
 	json.NewEncoder(reqBody).Encode(ticket)
 
 	// Send POST request to honeyclient to process ticket
-	honeyclientURL := os.Getenv("HONEYCLIENT_STUB")
-	if honeyclientURL == "" {
-		honeyclientURL = "http://localhost:8000/ticket"
+	honeyclientStub := os.Getenv("HONEYCLIENT_STUB")
+	if honeyclientStub == "" {
+		honeyclientStub = "http://localhost:8000"
 	}
-	resp, err := http.Post(honeyclientURL, "application/json", reqBody)
+	resp, err := http.Post(honeyclientStub+"/ticket", "application/json", reqBody)
 	if err != nil {
 		log.Println(err)
 		return
@@ -58,7 +58,7 @@ func ProcessTicket(ticket *Ticket) {
 	var fileArtifact FileArtifact
 	for _, s := range *body.FileArtifacts {
 		// Get file artifact from in memory storage
-		resp, err := http.Get("http://localhost:8000" + s)
+		resp, err := http.Get(honeyclientStub + s)
 		if err != nil {
 			log.Println(err)
 			return
