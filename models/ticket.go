@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -32,7 +33,11 @@ func ProcessTicket(ticket *Ticket) {
 	json.NewEncoder(reqBody).Encode(ticket)
 
 	// Send POST request to honeyclient to process ticket
-	resp, err := http.Post("http://localhost:8000/ticket", "application/json", reqBody)
+	honeyclientURL := os.Getenv("HONEYCLIENT_STUB")
+	if honeyclientURL == "" {
+		honeyclientURL = "http://localhost:8000/ticket"
+	}
+	resp, err := http.Post(honeyclientURL, "application/json", reqBody)
 	if err != nil {
 		log.Println(err)
 		return
