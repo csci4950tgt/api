@@ -3,6 +3,7 @@
 
 ### Misc ###
 *.swp
+*.env
 
 ### Go ###
 # Binaries for programs and plugins
