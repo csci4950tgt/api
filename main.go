@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/csci4950tgt/api/models"
 	"github.com/csci4950tgt/api/routes"
@@ -31,7 +33,11 @@ func main() {
 	models.InitDB()
 
 	// Listen and serve baby
-	fmt.Println("Server starting on http://localhost:8080...")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	fmt.Println("Server starting on http://localhost:" + port + "...")
 	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:3000", "http://localhost:5000"})
-	http.ListenAndServe(":8080", handlers.CORS(allowedOrigins)(r))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handlers.CORS(allowedOrigins)(r)))
 }
