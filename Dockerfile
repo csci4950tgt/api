@@ -27,7 +27,7 @@ RUN chmod +x /go/bin/cloud_sql_proxy
 
 # copy the wrapper script and credentials
 COPY run.sh /go/bin/run.sh
-COPY credentials.json /go/bin/credentials.json
+COPY secret.json /go/bin/secret.json
 
 
 ### STEP 2: Copy executable into a new smaller image

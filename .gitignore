@@ -2,7 +2,7 @@
 # Edit at https://www.gitignore.io/?templates=go,linux,macos,python
 
 # GCP
-credentials.json
+secret.json
 
 ### Misc ###
 *.swp
