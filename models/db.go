@@ -34,7 +34,7 @@ func InitDB() {
 
 	// Handle development vs production environment
 	var dbConnectionString string
-	productionEnv := getEnv("PRODUCTION", "false")
+	productionEnv := getEnv("PG_PRODUCTION", "false")
 	production, _ := strconv.ParseBool(productionEnv)
 	if production {
 		// In production, connect to Google Cloud Run's Honeyclient Service
