@@ -9,8 +9,8 @@ import (
 	"github.com/csci4950tgt/api/util"
 )
 
+// CreateTicket for handling, encode request into struct
 func CreateTicket(w http.ResponseWriter, r *http.Request) {
-	// Create a new ticket for handling, encode request into struct
 	var ticket models.Ticket
 
 	err := json.NewDecoder(r.Body).Decode(&ticket)
