@@ -10,10 +10,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// GetTicketScreenshots will retive the screenshots of the request from
+// database.
 func GetTicketScreenshots(w http.ResponseWriter, r *http.Request) {
 	// Get variables from route handler
 	vars := mux.Vars(r)                       // get dynamic variables from mux handler
-	ticketId, err := strconv.Atoi(vars["id"]) // get integer "id" from vars
+	ticketID, err := strconv.Atoi(vars["id"]) // get integer "id" from vars
 
 	if err != nil {
 		util.WriteHttpErrorCode(w, http.StatusBadRequest, "Missing required parameter: id.")
@@ -21,14 +23,11 @@ func GetTicketScreenshots(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Actually get screenshots from ticket
-
 	// Initialize Response
-	msg := fmt.Sprintf("Not yet implemented... ticketId: %d", ticketId)
+	msg := fmt.Sprintf("Not yet implemented... ticketID: %d", ticketID)
 	res := models.Response{
 		Success: true,
 		Message: &msg,
-		// TODO: Send screenshots array in response
 	}
 
 	util.WriteHttpResponse(w, res)

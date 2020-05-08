@@ -10,10 +10,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// GetTicket will retrive a single ticket from database.
 func GetTicket(w http.ResponseWriter, r *http.Request) {
 	// Get variables from router
 	vars := mux.Vars(r)                       // get dynamic variables from mux handler
-	ticketId, err := strconv.Atoi(vars["id"]) // get integer "ID" from var
+	ticketID, err := strconv.Atoi(vars["id"]) // get integer "ID" from var
 
 	if err != nil {
 		util.WriteHttpErrorCode(w, http.StatusBadRequest, "Missing required parameter: id.")
@@ -21,10 +22,10 @@ func GetTicket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ticket, err := models.GetTicketById(uint(ticketId))
+	ticket, err := models.GetTicketById(uint(ticketID))
 
 	if err != nil {
-		msg := fmt.Sprintf("Failed to find ticket with ID %d.", ticketId)
+		msg := fmt.Sprintf("Failed to find ticket with ID %d.", ticketID)
 		util.WriteHttpErrorCode(w, http.StatusNotFound, msg)
 
 		return

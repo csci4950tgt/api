@@ -45,8 +45,8 @@ Prerequisites:
 
 **With Golang**
 
-1. Run `go build` to compile the executable from the file "main.go"
-2. Run the executable named "api" (ex: if using mac run `./api`)
+1. Run `go build` at the root directory to compile the executable from the file "main.go"
+2. Run the executable named "api" (e.g. if using mac run `./api`)
 
 **With Docker**
 
