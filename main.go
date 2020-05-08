@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
@@ -20,8 +19,6 @@ func handleRoutes(r *mux.Router) {
 	r.HandleFunc("/api/tickets/{id}/artifacts", routes.GetTicketArtifacts).Methods("GET")
 	r.HandleFunc("/api/tickets/{id}/artifacts/{fileName:.*}", routes.GetArtifact).Methods("GET")
 	r.HandleFunc("/api/tickets/{id}/artifacts/screenshots", routes.GetTicketScreenshots).Methods("GET")
-	// TODO: make following route work
-	// r.HandleFunc("/api/tickets/{id}/artifacts/js", routes.GetTicketJS).Methods("GET")
 }
 
 func main() {
@@ -39,5 +36,5 @@ func main() {
 	}
 	fmt.Println("Server starting on http://localhost:" + port + "...")
 	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:3000", "http://localhost:5000", "https://frontend-bwkgpgz7aq-uc.a.run.app"})
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handlers.CORS(allowedOrigins)(r)))
+	http.ListenAndServe(fmt.Sprintf(":%s", port), handlers.CORS(allowedOrigins)(r))
 }
