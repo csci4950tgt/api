@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/csci4950tgt/api/models"
 	"github.com/csci4950tgt/api/routes"
@@ -18,8 +19,6 @@ func handleRoutes(r *mux.Router) {
 	r.HandleFunc("/api/tickets/{id}/artifacts", routes.GetTicketArtifacts).Methods("GET")
 	r.HandleFunc("/api/tickets/{id}/artifacts/{fileName:.*}", routes.GetArtifact).Methods("GET")
 	r.HandleFunc("/api/tickets/{id}/artifacts/screenshots", routes.GetTicketScreenshots).Methods("GET")
-	// TODO: make following route work
-	// r.HandleFunc("/api/tickets/{id}/artifacts/js", routes.GetTicketJS).Methods("GET")
 }
 
 func main() {
@@ -31,7 +30,11 @@ func main() {
 	models.InitDB()
 
 	// Listen and serve baby
-	fmt.Println("Server starting on http://localhost:8080...")
-	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:3000", "http://localhost:5000"})
-	http.ListenAndServe(":8080", handlers.CORS(allowedOrigins)(r))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	fmt.Println("Server starting on http://localhost:" + port + "...")
+	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:3000", "http://localhost:5000", "https://frontend-bwkgpgz7aq-uc.a.run.app"})
+	http.ListenAndServe(fmt.Sprintf(":%s", port), handlers.CORS(allowedOrigins)(r))
 }

@@ -50,12 +50,23 @@ Prerequisites:
 
 **With Docker**
 
-1. Run `docker run -p 8080:8080 csci4950tgt/api`
+Both a `Dockerfile` and a `Dockerfile.prod` are present for this service. The `Dockerfile` file is used to run the service locally, and the `Dockerfile.prod` is for a production environment, which needs a proxy alongside the api. To run just this image locally, use the following commands:
 
-#### Steps to rebuild Dockerfile and push new image to Docker repo
+```bash
+ docker build --tag api .      # Build the docker image
+ docker run -p 8080:8080 api   # Run image as container on port 8080
+```
 
-1. Run `docker build -t csci4950tgt/api .` to build the image
-2. Run `docker push csci4950tgt/api` to push new image to Docker repo
+Alternatively, You can set up the entire system using Docker and Docker-Compose. See more information and instructions in the [csci4950tgt/utils](https://github.com/csci4950tgt/utils) repository.
+
+#### How to submit to Google Cloud Run:
+
+While the owners of this repository figure out how they want to integrate CI/CD with this service, the only current way to deploy the api as a Cloud Run Service is through the following commands. Note that this will only work if you have the correct permissions with Google Cloud, and the required `secret.json` file.
+
+```bash
+ docker build . -f Dockerfile.prod --tag gcr.io/vigilante-web-heist/api  # Build image with Google's Container Registry
+ gcloud run deploy --image gcr.io/vigilante-web-heist/api --platform managed  # Deploy as Cloud Run Service
+```
 
 #### Steps to test:
 
