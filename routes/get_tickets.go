@@ -8,6 +8,7 @@ import (
 	"github.com/csci4950tgt/api/util"
 )
 
+// GetTickets will take a bunch of tickets at the same time.
 func GetTickets(w http.ResponseWriter, r *http.Request) {
 	// get tickets from database
 	tickets, err := models.GetTickets()
